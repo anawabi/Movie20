@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MoViewer</string>
+    <string name="menu_item_sort">Sort</string>
+    <string name="menu_item_sort_by_most_popular">Most Popular</string>
+    <string name="menu_item_sort_by_top_rated">Highest Rated</string>
+    <string name="movie_poster_description">Movie Poster</string>
+    <string name="movie_title">Title:</string>
+    <string name="movie_rating">Rating:</string>
+    <string name="movie_released">Released:</string>
+    <string name="movie_overview">Overview:</string>
+    <dimen name="detail_poster_image">200dp</dimen>
+    <dimen name="layout_margin">8dp</dimen>
+    <dimen name="tv_padding">1dp</dimen>
+    <dimen name="progress_bar_width">100dp</dimen>
+    <dimen name="progress_bar_height">100dp</dimen>
+</resources>
