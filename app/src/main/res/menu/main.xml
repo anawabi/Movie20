@@ -19,4 +19,8 @@
         android:orderInCategory="3"
         android:title="@string/menu_item_sort_by_top_rated"
         android:id="@+id/sort_by_top_rated" />
+    <item
+        android:orderInCategory="4"
+        android:title="@string/menu_item_favorite"
+        android:id="@+id/favorites" />
 </menu>

@@ -4,18 +4,22 @@
 
 package com.amannawabi.moview;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amannawabi.moview.Controller.ReviewAdapter;
 import com.amannawabi.moview.Controller.TrailerAdapter;
+import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Model.Review;
 import com.amannawabi.moview.Model.Trailer;
@@ -43,7 +47,8 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
     private URL reviewUrl;
     private List<Trailer> sMovieTrailerRef;
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w780//";
-
+//    public static Movie20Database mMovie20Database;
+    private FloatingActionButton mFavorite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,17 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
         mMovieRating = findViewById(R.id.movie_rating);
         mMovieOverview = findViewById(R.id.movie_overview);
         mMovieReleaseDate = findViewById(R.id.movie_release_date);
+        mFavorite = findViewById(R.id.favorite_abtn);
+        mFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Movies movies = getIntent().getParcelableExtra("Detail Layout");
+                MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
+             Toast.makeText(DetailedLayout.this, "Record creatred", Toast.LENGTH_LONG).show();
+            }
+        });
+//        mMovie20Database = Room.databaseBuilder(getApplicationContext(), Movie20Database.class,
+//                "movieDB").build();
 
         createDetailLayout();
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amannawabi.moview.DetailedLayout;
 import com.amannawabi.moview.Model.Trailer;
 import com.amannawabi.moview.R;
 
@@ -20,6 +21,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     public TrailerAdapter(List<Trailer> trailerList) {
         mTrailerList = trailerList;
+
         this.notifyDataSetChanged();
     }
 
@@ -49,6 +51,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         public TrailerViewHolder(View itemView) {
             super(itemView);
             mTrailerType = itemView.findViewById(R.id.trailer_Type);
+
         }
+
+        /**
+         * Generates onClick event for the items in Recycler view by identifyind their position
+         */
+//
     }
 }

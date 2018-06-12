@@ -4,6 +4,10 @@
 
 package com.amannawabi.moview.Model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,15 +15,23 @@ import android.os.Parcelable;
  * Generates Data Model class and sets the setter and getter methods and send the data by implementing
  * parcelable interface
  */
+@Entity
 public class Movies implements Parcelable {
 
+    @PrimaryKey
     private int mMovieId;
+    @ColumnInfo(name = "movie_title")
     private String mMovieTitle;
+    @ColumnInfo(name = "movie_poster")
     private String mMoviePoster;
+    @ColumnInfo(name = "movie_overview")
     private String mMovieOverView;
+    @ColumnInfo(name = "movie_ratings")
     private String mRatings;
+    @ColumnInfo(name = "movie_release_date")
     private String mReleaseDate;
 
+    @Ignore
     public Movies(int mMovieId, String movieTitle, String moviePoster, String movieOverView, String ratings, String releaseDate) {
         this.mMovieId = mMovieId;
         this.mMovieTitle = movieTitle;

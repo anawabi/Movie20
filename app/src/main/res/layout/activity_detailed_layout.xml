@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack">
+   android:background="@color/colorPrimary">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
 
                 <ImageView
                     android:id="@+id/movie_poster"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/detail_poster_image"
                     android:layout_height="@dimen/detail_poster_image"
                     android:contentDescription="@string/movie_poster_description"
                     android:foregroundGravity="fill_horizontal"
@@ -152,6 +152,20 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/movie_overview_caption" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/favorite_abtn"
+                    android:layout_width="36dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    app:backgroundTint="@android:color/background_light"
+                    app:layout_constraintBottom_toBottomOf="@+id/movie_poster"
+                    app:layout_constraintEnd_toEndOf="@+id/movie_poster"
+                    app:layout_constraintHorizontal_bias="0.979"
+                    app:layout_constraintStart_toStartOf="@+id/movie_poster"
+                    app:srcCompat="@drawable/favorite" />
             </android.support.constraint.ConstraintLayout>
 
             <RelativeLayout

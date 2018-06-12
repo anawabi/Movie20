@@ -5,6 +5,7 @@
 package com.amannawabi.moview;
 
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.amannawabi.moview.Controller.MovieAdapter;
+import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Utils.MovieThread;
 import com.amannawabi.moview.Utils.NetworkUtils;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
     private static final String TAG = "MovieMainActivity";
     private static List<Movies> mMovieList = new ArrayList<>();
     private URL url;
+    public static Movie20Database mMovie20DB;
 //    private Bundle mRecyclerViewState;
 //    public static final String LIST_STATE_KEY = "List_State_Key";
 
@@ -41,20 +44,11 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started");
         recyclerView = findViewById(R.id.movies_rv);
-//        if(savedInstanceState !=null){
-////            mRecyclerViewState = savedInstanceState.get;
-//        }
+        mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "movie20db").allowMainThreadQueries().build();
         createRecycler("popular");
         Log.d(TAG, "onCreate: Saved Instance " + savedInstanceState);
 
     }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//
-//    }
 
     /**
      * Generates URL by sending the sort order parameter to Network Utils buildURL method and generates
@@ -118,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
         } else if (selectedItem == R.id.sort_by_top_rated) {
             createRecycler("top_rated");
             Log.d(TAG, "onOptionsItemSelected: " + url);
+        }else if (selectedItem == R.id.favorites){
+            Toast.makeText(MainActivity.this, "You Clicked Favorite", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
