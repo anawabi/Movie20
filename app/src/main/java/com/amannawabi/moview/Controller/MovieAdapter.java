@@ -55,7 +55,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
     @Override
     public movieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_layout, parent, false);
-        Log.d(TAG, "onCreateViewHolder: started");
+//        Log.d(TAG, "onCreateViewHolder: started");
         return new movieViewHolder(view);
     }
 
@@ -69,7 +69,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
         try {
 
             Picasso.get().load(POSTER_PATH + mMovies.get(position).getMoviePoster()).into(holder.mPoster);
-            Log.d(TAG, "onBindViewHolder: ");
+//            Log.d(TAG, "onBindViewHolder: ");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +83,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
      */
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: " + mMovies.size());
+//        Log.d(TAG, "getItemCount: " + mMovies.size());
         return mMovies.size();
     }
 

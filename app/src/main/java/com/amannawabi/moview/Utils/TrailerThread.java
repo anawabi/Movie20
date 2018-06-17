@@ -47,7 +47,7 @@ public class TrailerThread extends AsyncTask<URL, Void, List<Trailer>> {
 
             mTrailerList = JsonUtils.parseTrailerJson(jSonData);
 
-            Log.d(TAG, "doInBackground: " + mTrailerList.size());
+//            Log.d(TAG, "doInBackground: " + mTrailerList.size());
 
         } catch (IOException e) {
             e.printStackTrace();

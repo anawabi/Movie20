@@ -65,7 +65,7 @@ public class JsonUtils {
 
                 mTrailerList.add(mTrailer);
             }
-            Log.d(TAG, "parseTrailerJson: " + mTrailerList.size());
+//            Log.d(TAG, "parseTrailerJson: " + mTrailerList.size());
         } catch (JSONException e) {
 
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class JsonUtils {
 
                 mReviewList.add(mReview);
             }
-            Log.d(TAG, "parseTrailerJson: " + mReviewList.size());
+//            Log.d(TAG, "parseTrailerJson: " + mReviewList.size());
         } catch (JSONException e) {
 
             e.printStackTrace();

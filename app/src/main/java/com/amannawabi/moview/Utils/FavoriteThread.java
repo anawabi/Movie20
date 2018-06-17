@@ -2,10 +2,9 @@ package com.amannawabi.moview.Utils;
 
 
 import android.os.AsyncTask;
-
 import android.util.Log;
 
-
+import com.amannawabi.moview.MainActivity;
 import com.amannawabi.moview.Model.Movies;
 
 import java.io.IOException;
@@ -18,14 +17,15 @@ import java.util.List;
  * to UI tread through Async Task methods
  */
 
-public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
-    private onTaskCompleted mTaskCompleted;
-    private static final String TAG = "MovieHttpHandler";
+public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
+    private onFavoriteTaskCompleted mFavoriteTaskCompleted;
+    private static final String TAG = "FavoriteThreadHandler";
 
-    public MovieThread(onTaskCompleted TaskCompleted) {
+    public FavoriteThread(onFavoriteTaskCompleted TaskCompleted) {
 
-        mTaskCompleted = TaskCompleted;
+        mFavoriteTaskCompleted = TaskCompleted;
     }
+
 
     @Override
     protected void onPreExecute() {
@@ -37,26 +37,21 @@ public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
      * Get the URL and starts the getting data from server in background thread and send
      * the data to JSON parser for parsing and stores it in Array List to be sent to UI thread
      */
-    @Override
-    protected List<Movies> doInBackground(URL... urls) {
-        URL url = urls[0];
 
+    @Override
+    protected List<Movies> doInBackground(Void... voids) {
         String jSonData;
 
-        List<Movies> mMovielist = new ArrayList<>();
+        List<Movies> mMovielists = new ArrayList<>();
 
-        try {
-            jSonData = NetworkUtils.getResponseFromHttpUrl(url);
-//                Log.d(TAG, "doInBackground: " +jSonData);
+//        try {
+        mMovielists = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
+        Log.d(TAG, "doInBackground: " +mMovielists.size());
 
-            mMovielist = JsonUtils.parseMovieJson(jSonData);
-//            Log.d(TAG, "doInBackground: " + mMovielist.size());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return mMovielist;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return mMovielists;
     }
 
     /**
@@ -66,7 +61,7 @@ public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
     @Override
     protected void onPostExecute(List<Movies> movies) {
         super.onPostExecute(movies);
-        mTaskCompleted.onTaskCompleted(movies);
+        mFavoriteTaskCompleted.onFavoriteTaskCompleted(movies);
 
 
     }

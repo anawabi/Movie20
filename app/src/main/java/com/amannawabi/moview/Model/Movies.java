@@ -15,7 +15,7 @@ import android.os.Parcelable;
  * Generates Data Model class and sets the setter and getter methods and send the data by implementing
  * parcelable interface
  */
-@Entity
+@Entity (tableName = "movies")
 public class Movies implements Parcelable {
 
     @PrimaryKey

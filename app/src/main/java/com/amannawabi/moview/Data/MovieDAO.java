@@ -3,16 +3,27 @@ package com.amannawabi.moview.Data;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 
 import com.amannawabi.moview.Model.Movies;
 
+import java.util.List;
+
 @Dao
 public interface MovieDAO {
+    @Query("select * from movies")
+    public List<Movies> viewMovie();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     public void addMovie(Movies movies);
+
+
 
     @Delete
     public void deleteMovie(Movies movies);
+
+    @Query("SELECT * FROM movies WHERE mMovieId=:id")
+    boolean ifExist (int id);
 
 }

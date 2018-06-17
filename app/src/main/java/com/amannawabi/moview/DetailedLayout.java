@@ -5,7 +5,10 @@
 package com.amannawabi.moview;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,10 +34,11 @@ import com.amannawabi.moview.Utils.onTrailerTaskCompleted;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 
-public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCompleted, onReviewTaskCompleted {
+public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.ListItemClickListener, onTrailerTaskCompleted, onReviewTaskCompleted {
     private static final String TAG = "MovieDetailedLayout";
     private TextView mMovieTitle, mMovieRating, mMovieOverview, mMovieReleaseDate;
     private RecyclerView mTrailerRecyclerView;
@@ -49,6 +53,7 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w780//";
 //    public static Movie20Database mMovie20Database;
     private FloatingActionButton mFavorite;
+    boolean isFavorite = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +70,20 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
             @Override
             public void onClick(View v) {
                 Movies movies = getIntent().getParcelableExtra("Detail Layout");
-                MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
-             Toast.makeText(DetailedLayout.this, "Record creatred", Toast.LENGTH_LONG).show();
+               if(!isFavorite) {
+                   MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
+                   mFavorite.setBackgroundResource(R.drawable.favorite);
+                   Toast.makeText(DetailedLayout.this, "Movie Added to Favorite List", Toast.LENGTH_LONG).show();
+                    isFavorite=true;
+               } else{
+                   MainActivity.mMovie20DB.mMovieDAO().deleteMovie(movies);
+                   mFavorite.setBackgroundResource(R.drawable.unfavorite);
+                   Toast.makeText(DetailedLayout.this, "Movie Deleted from Favorite List", Toast.LENGTH_SHORT).show();
+                    isFavorite=false;
+               }
             }
         });
-//        mMovie20Database = Room.databaseBuilder(getApplicationContext(), Movie20Database.class,
-//                "movieDB").build();
+
 
         createDetailLayout();
 
@@ -102,9 +115,10 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
     }
 
 
-    private void createTrailerRecycler(String iMovieID) {
+    private void createTrailerRecycler(String iMovieID){
         mTrailerRecyclerView.setHasFixedSize(true);
         mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
         trailerUrl = NetworkUtils.buildTrailerURL(iMovieID);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
@@ -133,9 +147,10 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
 
     @Override
     public void onTrailerTaskCompleted(List<Trailer> mTrailerList) {
+
         sMovieTrailerRef = mTrailerList;
-        Log.d(TAG, "onTaskCompleted2: " + sMovieTrailerRef.size());
-        mTrailerAdapter = new TrailerAdapter(sMovieTrailerRef);
+//        Log.d(TAG, "onTaskCompleted2: " + sMovieTrailerRef.size());
+        mTrailerAdapter = new TrailerAdapter(sMovieTrailerRef, DetailedLayout.this);
         mTrailerRecyclerView.setAdapter(mTrailerAdapter);
     }
 
@@ -143,5 +158,13 @@ public class DetailedLayout extends AppCompatActivity implements onTrailerTaskCo
     public void onReviewTaskCompleted(List<Review> mReviewList) {
         mReviewAdapter = new ReviewAdapter(mReviewList);
         mReviewRecyclerView.setAdapter(mReviewAdapter);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        String mKey = sMovieTrailerRef.get(clickedItemIndex).getsTrailerKey();
+        RecyclerView.ViewHolder mKeys = mTrailerRecyclerView.findViewHolderForItemId(clickedItemIndex);
+
+        Toast.makeText(this, "Trailer Key " +"Index " +clickedItemIndex + " " + mKeys, Toast.LENGTH_SHORT).show();
     }
 }

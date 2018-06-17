@@ -19,15 +19,18 @@ import android.widget.Toast;
 import com.amannawabi.moview.Controller.MovieAdapter;
 import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
+import com.amannawabi.moview.Utils.FavoriteThread;
 import com.amannawabi.moview.Utils.MovieThread;
 import com.amannawabi.moview.Utils.NetworkUtils;
+import com.amannawabi.moview.Utils.onFavoriteTaskCompleted;
 import com.amannawabi.moview.Utils.onTaskCompleted;
+import com.facebook.stetho.Stetho;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements onTaskCompleted, MovieAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements onFavoriteTaskCompleted, onTaskCompleted, MovieAdapter.ListItemClickListener {
 
     private RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter;
@@ -38,11 +41,13 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
 //    private Bundle mRecyclerViewState;
 //    public static final String LIST_STATE_KEY = "List_State_Key";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Started");
+//        Log.d(TAG, "onCreate: Started");
         recyclerView = findViewById(R.id.movies_rv);
         mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "movie20db").allowMainThreadQueries().build();
         createRecycler("popular");
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         url = NetworkUtils.buildURL(sortBy);
-        Log.d(TAG, "onCreate: URL Generated" + url);
+//        Log.d(TAG, "onCreate: URL Generated" + url);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
             MovieThread movieQuery = new MovieThread(MainActivity.this);
@@ -69,15 +74,29 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
         }
 
     }
+    private void createFavoriteRecycler() {
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+       boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
+        if (isNetworkConnected) {
+            FavoriteThread favoriteQuery = new FavoriteThread(MainActivity.this);
+            favoriteQuery.execute();
+        } else {
+            Toast.makeText(MainActivity.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     @Override
     public void onTaskCompleted(List<Movies> movies) {
-        Log.d(TAG, "onTaskCompleted: " + movies.size());
+//        Log.d(TAG, "onTaskCompleted: " + movies.size());
         mMovieList = movies;
         mAdapter = new MovieAdapter(mMovieList, MainActivity.this);
-        Log.d(TAG, "onCreate: " + mMovieList.size());
+//        Log.d(TAG, "onCreate: " + mMovieList.size());
         recyclerView.setAdapter(mAdapter);
-        Log.d(TAG, "onPostExecute: " + mMovieList.size());
+//        Log.d(TAG, "onPostExecute: " + mMovieList.size());
     }
 
 
@@ -111,12 +130,22 @@ public class MainActivity extends AppCompatActivity implements onTaskCompleted, 
             createRecycler("popular");
         } else if (selectedItem == R.id.sort_by_top_rated) {
             createRecycler("top_rated");
-            Log.d(TAG, "onOptionsItemSelected: " + url);
+//            Log.d(TAG, "onOptionsItemSelected: " + url);
         }else if (selectedItem == R.id.favorites){
+            createFavoriteRecycler();
             Toast.makeText(MainActivity.this, "You Clicked Favorite", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFavoriteTaskCompleted(List<Movies> movies) {
+        //        Log.d(TAG, "onTaskCompleted: " + movies.size());
+        mMovieList = movies;
+        mAdapter = new MovieAdapter(mMovieList, MainActivity.this);
+//        Log.d(TAG, "onCreate: " + mMovieList.size());
+        recyclerView.setAdapter(mAdapter);
+//        Log.d(TAG, "onPostExecute: " + mMovieList.size());
+    }
 }
 
