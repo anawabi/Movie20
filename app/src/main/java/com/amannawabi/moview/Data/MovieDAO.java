@@ -13,15 +13,15 @@ import java.util.List;
 @Dao
 public interface MovieDAO {
     @Query("select * from movies")
-    public List<Movies> viewMovie();
+     List<Movies> viewMovie();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    public void addMovie(Movies movies);
+     void addMovie(Movies movies);
 
 
 
     @Delete
-    public void deleteMovie(Movies movies);
+    void deleteMovie(Movies movies);
 
     @Query("SELECT * FROM movies WHERE mMovieId=:id")
     boolean ifExist (int id);

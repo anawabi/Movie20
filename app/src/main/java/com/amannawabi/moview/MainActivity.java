@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     private static List<Movies> mMovieList = new ArrayList<>();
     private URL url;
     public static Movie20Database mMovie20DB;
-//    private Bundle mRecyclerViewState;
-//    public static final String LIST_STATE_KEY = "List_State_Key";
+
 
 
     @Override
@@ -139,8 +138,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     }
 
     @Override
-    public void onFavoriteTaskCompleted(List<Movies> movies) {
-        //        Log.d(TAG, "onTaskCompleted: " + movies.size());
+    public void onFavoriteTaskCompleted(List<Movies> movies) {//        Log.d(TAG, "onTaskCompleted: " + movies.size());
         mMovieList = movies;
         mAdapter = new MovieAdapter(mMovieList, MainActivity.this);
 //        Log.d(TAG, "onCreate: " + mMovieList.size());

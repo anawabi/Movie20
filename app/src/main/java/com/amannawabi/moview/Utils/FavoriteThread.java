@@ -27,6 +27,7 @@ public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
     }
 
 
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -37,21 +38,20 @@ public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
      * Get the URL and starts the getting data from server in background thread and send
      * the data to JSON parser for parsing and stores it in Array List to be sent to UI thread
      */
-
     @Override
     protected List<Movies> doInBackground(Void... voids) {
         String jSonData;
 
-        List<Movies> mMovielists = new ArrayList<>();
+        List<Movies> mMovielist = new ArrayList<>();
 
 //        try {
-        mMovielists = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
-        Log.d(TAG, "doInBackground: " +mMovielists.size());
+        mMovielist = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
+        Log.d(TAG, "doInBackground: " +mMovielist.size());
 
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        return mMovielists;
+        return mMovielist;
     }
 
     /**
