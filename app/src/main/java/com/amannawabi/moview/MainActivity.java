@@ -5,6 +5,7 @@
 package com.amannawabi.moview;
 
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements onFavoriteTaskCompleted, onTaskCompleted, MovieAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements onFavoriteTaskCompleted,
+        onTaskCompleted, MovieAdapter.ListItemClickListener {
 
     private RecyclerView recyclerView;
     RecyclerView.Adapter mAdapter;
@@ -46,7 +48,10 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
+
+
 //        Log.d(TAG, "onCreate: Started");
+
         recyclerView = findViewById(R.id.movies_rv);
         mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "movie20db").allowMainThreadQueries().build();
         createRecycler("popular");
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
             MovieThread movieQuery = new MovieThread(MainActivity.this);
             movieQuery.execute(url);
         } else {
+            createFavoriteRecycler();
             Toast.makeText(MainActivity.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
         }
 
@@ -78,13 +84,8 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-       boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
-        if (isNetworkConnected) {
             FavoriteThread favoriteQuery = new FavoriteThread(MainActivity.this);
             favoriteQuery.execute();
-        } else {
-            Toast.makeText(MainActivity.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
-        }
 
     }
 

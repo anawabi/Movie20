@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.amannawabi.moview.DetailedLayout;
 import com.amannawabi.moview.Model.Trailer;
 import com.amannawabi.moview.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     private List<Trailer> mTrailerList;
     private static final String TAG = "MovieTrailerAdapter";
-    Context mContext;
+    private static final String THUMNAIL_PATH = "https://img.youtube.com/vi/";
+    private static final String THUMBNAIL_EXT = "/mqdefault.jpg";
     final private TrailerAdapter.ListItemClickListener mOnClickListener;
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
@@ -47,15 +50,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     @Override
     public void onBindViewHolder(@NonNull final TrailerViewHolder holder, final int position) {
         holder.mTrailerType.setText(mTrailerList.get(position).getsName() + " " + position);
-//        holder.mParentLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Uri webpage = Uri.parse("https://www.youtube.com/watch?v="+mTrailerList.get(position).getsTrailerKey());
-//                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-//                mContext.startActivity(intent);
-//                Toast.makeText(mContext, mTrailerList.get(getItemViewType(1)).getsTrailerKey(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        Picasso.get().load(THUMNAIL_PATH + mTrailerList.get(position).getsTrailerKey() + THUMBNAIL_EXT).into(holder.mTrailerThumbnail);
+        Log.d(TAG, "onBindViewHolder: " + THUMNAIL_PATH + mTrailerList.get(position).getsTrailerKey()+THUMBNAIL_EXT);
     }
 
     @Override
@@ -66,11 +62,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView mTrailerType;
         LinearLayout mParentLayout;
+        ImageView mTrailerThumbnail;
 
         public TrailerViewHolder(View itemView) {
             super(itemView);
             mTrailerType = itemView.findViewById(R.id.trailer_Type);
             mParentLayout = itemView.findViewById(R.id.parent_layout);
+            mTrailerThumbnail = itemView.findViewById(R.id.movie_trailer);
             itemView.setOnClickListener(this);
 
         }

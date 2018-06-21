@@ -4,6 +4,9 @@
 
 package com.amannawabi.moview.Model;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -11,12 +14,25 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Generates Data Model class and sets the setter and getter methods and send the data by implementing
  * parcelable interface
  */
 @Entity (tableName = "movies")
-public class Movies implements Parcelable {
+public class Movies extends ViewModel implements Parcelable {
+
+
+//    private MutableLiveData<List<Movies>> mMovies;
+//
+//    public LiveData<List<Movies>> getMovies(){
+//        if (mMovies == null){
+//            mMovies = new MutableLiveData<List<Movies>>();
+//
+//        }
+//        return mMovies;
+//    }
 
     @PrimaryKey
     private int mMovieId;

@@ -4,10 +4,7 @@
 
 package com.amannawabi.moview;
 
-import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 
 import com.amannawabi.moview.Controller.ReviewAdapter;
 import com.amannawabi.moview.Controller.TrailerAdapter;
-import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Model.Review;
 import com.amannawabi.moview.Model.Trailer;
@@ -34,7 +30,6 @@ import com.amannawabi.moview.Utils.onTrailerTaskCompleted;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 
@@ -47,10 +42,12 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     private RecyclerView.Adapter mReviewAdapter;
     private ImageView mMoviePoster;
     private String iMovieRating;
-    private URL trailerUrl;
-    private URL reviewUrl;
+    private URL mTrailerUrl;
+    private URL mReviewUrl;
     private List<Trailer> sMovieTrailerRef;
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w780//";
+
+    private static String youtubeAdd = "https://www.youtube.com/watch?v=ue80QwXMRHg";
 //    public static Movie20Database mMovie20Database;
     private FloatingActionButton mFavorite;
     boolean isFavorite = false;
@@ -108,10 +105,11 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
 
         createTrailerRecycler(iMovieID);
         createReviewRecycler(iMovieID);
-        Log.d(TAG, "createDetailLayout: Trailer URL " + trailerUrl);
+        Log.d(TAG, "createDetailLayout: Trailer URL " + mTrailerUrl);
         Log.d(TAG, "createDetailLayout: " + movies.getMovieId());
 
 //        https://www.youtube.com/watch?v=ue80QwXMRHg
+//        https://img.youtube.com/vi/ZJDMWVZta3M/mqdefault.jpg
     }
 
 
@@ -119,11 +117,12 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         mTrailerRecyclerView.setHasFixedSize(true);
         mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-        trailerUrl = NetworkUtils.buildTrailerURL(iMovieID);
+        mTrailerUrl = NetworkUtils.buildTrailerURL(iMovieID);
+        Log.d(TAG, "createTrailerRecycler: " + mTrailerUrl);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
             TrailerThread trailerQuery = new TrailerThread(DetailedLayout.this);
-            trailerQuery.execute(trailerUrl);
+            trailerQuery.execute(mTrailerUrl);
         } else {
             Toast.makeText(DetailedLayout.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
         }
@@ -133,12 +132,12 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     private void createReviewRecycler(String iMovieID) {
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        reviewUrl = NetworkUtils.buildReviewURL(iMovieID);
+        mReviewUrl = NetworkUtils.buildReviewURL(iMovieID);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
             ReviewThread reviewQuery = new ReviewThread(DetailedLayout.this);
 
-            reviewQuery.execute(reviewUrl);
+            reviewQuery.execute(mReviewUrl);
         } else {
             Toast.makeText(DetailedLayout.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
         }
@@ -163,8 +162,17 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     @Override
     public void onListItemClick(int clickedItemIndex) {
         String mKey = sMovieTrailerRef.get(clickedItemIndex).getsTrailerKey();
-        RecyclerView.ViewHolder mKeys = mTrailerRecyclerView.findViewHolderForItemId(clickedItemIndex);
+        String sTrailerYouTubeUrl = NetworkUtils.buildYouTubeURL(mKey);
+//        Log.d(TAG, "onListItemClick: " +sTrailerYouTubeUrl);
+        Uri mTrailerYouTubeUrl = Uri.parse(sTrailerYouTubeUrl);
+//       Uri mTrailerYouTubeUrl = Uri.parse(youtubeAdd);
+        Intent intent = new Intent(Intent.ACTION_VIEW, mTrailerYouTubeUrl);
+//        Log.d(TAG, "onListItemClick: " +mTrailerYouTubeUrl);
+        if (intent.resolveActivity(getPackageManager())!=null){
+            startActivity(intent);
+//            Toast.makeText(this, "Trailer Key " +"Index " +mTrailerYouTubeUrl, Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(this, "Trailer Key " +"Index " +clickedItemIndex + " " + mKeys, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

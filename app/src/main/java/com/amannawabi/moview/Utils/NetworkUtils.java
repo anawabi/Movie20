@@ -18,11 +18,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 public class NetworkUtils {
     private final static String BASE_URL = "http://api.themoviedb.org/3/movie";
-    private final static String YOUTUBE_URL = " https://www.youtube.com/watch";
+    private final static String YOUTUBE_URL = "https://www.youtube.com/watch";
     private final static String PARAM_V = "v";
     private final static String PARAM_API_KEY = "api_key";
     private static final String API_KEY = BuildConfig.API_KEY;
@@ -75,6 +76,13 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         return Url;
+    }
+
+    public static String buildYouTubeURL(String mTrailerKey) {
+        Uri buildUri = Uri.parse(YOUTUBE_URL).buildUpon()
+                .appendQueryParameter(PARAM_V, mTrailerKey).build();
+
+        return buildUri.toString();
     }
 
     /**

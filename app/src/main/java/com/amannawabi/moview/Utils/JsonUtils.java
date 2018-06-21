@@ -57,15 +57,18 @@ public class JsonUtils {
             JSONObject response = new JSONObject(json);
             JSONArray resultArray = response.getJSONArray("results");
             for (int i = 0; i < resultArray.length(); i++) {
-                JSONObject obj = resultArray.getJSONObject(0);
+                JSONObject obj = resultArray.getJSONObject(i);
                 mTrailer = new Trailer(obj.getString("id"),
                         obj.getString("key"),
                         obj.getString("type"),
                         obj.getString("name"));
 
                 mTrailerList.add(mTrailer);
+
             }
-//            Log.d(TAG, "parseTrailerJson: " + mTrailerList.size());
+//            Log.d(TAG, "parseTrailerJson: " + mTrailerList.get(0).getsTrailerKey());
+//            Log.d(TAG, "parseTrailerJson: " + mTrailerList.get(1).getsTrailerKey());
+//            Log.d(TAG, "parseTrailerJson: " + mTrailerList.get(2).getsTrailerKey());
         } catch (JSONException e) {
 
             e.printStackTrace();
