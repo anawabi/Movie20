@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHolder> {
 
-    private final List<Movies> mMovies;
+    private List<Movies> mMovies;
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185//";
     private static final String TAG = "MovieAdapter";
 
@@ -45,6 +45,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
         mMovies = movies;
         mOnClickListener = listener;
         this.notifyDataSetChanged();
+    }
+
+    public MovieAdapter(ListItemClickListener onClickListener) {
+        mOnClickListener = onClickListener;
     }
 
     /**
@@ -86,7 +90,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
 //        Log.d(TAG, "getItemCount: " + mMovies.size());
         return mMovies.size();
     }
-
+    public void setMoviess(List<Movies> movies){
+        mMovies = movies;
+        notifyDataSetChanged();
+    }
     public class movieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView mPoster;
 

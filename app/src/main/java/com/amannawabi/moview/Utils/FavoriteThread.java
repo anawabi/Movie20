@@ -40,17 +40,12 @@ public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
      */
     @Override
     protected List<Movies> doInBackground(Void... voids) {
-        String jSonData;
 
-        List<Movies> mMovielist = new ArrayList<>();
+        List<Movies> mMovielist;
 
-//        try {
         mMovielist = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
-        Log.d(TAG, "doInBackground: " +mMovielist.size());
+//        Log.d(TAG, "doInBackground: " +mMovielist.size());
 
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return mMovielist;
     }
 

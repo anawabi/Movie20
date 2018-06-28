@@ -1,5 +1,6 @@
 package com.amannawabi.moview.Data;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -26,4 +27,6 @@ public interface MovieDAO {
     @Query("SELECT * FROM movies WHERE mMovieId=:id")
     boolean ifExist (int id);
 
+    @Query("select * from movies")
+    LiveData<List<Movies>> getAllMovies();
 }
