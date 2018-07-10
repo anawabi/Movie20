@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
+
 package com.amannawabi.moview.Controller;
 
 import android.support.annotation.NonNull;
@@ -34,7 +39,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        holder.mReviewAuthor.setText(mReviewList.get(position).getsAuthor() + " " + position);
+        int count = position+1;
+        holder.mReviewAuthor.setText(mReviewList.get(position).getsAuthor() + " " + count);
         holder.mReviewContent.setText(mReviewList.get(position).getsContent());
 
     }

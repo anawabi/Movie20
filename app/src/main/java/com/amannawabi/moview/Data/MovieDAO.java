@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package com.amannawabi.moview.Data;
 
 import android.arch.lifecycle.LiveData;

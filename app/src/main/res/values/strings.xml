@@ -1,17 +1,24 @@
 <resources>
     <string name="app_name">Movie20</string>
     <string name="menu_item_sort">Sort</string>
-    <string name="menu_item_sort_by_most_popular">Most Popular</string>
-    <string name="menu_item_sort_by_top_rated">Highest Rated</string>
+    <string name="menu_item_sort_by_most_popular">popular</string>
+    <string name="menu_item_sort_by_top_rated">top_rated</string>
     <string name="menu_item_favorite">Favorites</string>
     <string name="movie_poster_description">Movie Poster</string>
     <string name="movie_title">Title:</string>
     <string name="movie_rating">Rating:</string>
     <string name="movie_released">Released:</string>
     <string name="movie_overview">Overview:</string>
+    <string name="trailer_rv_title">Trailers</string>
+    <string name="review_rv_title">Reviews</string>
     <dimen name="detail_poster_image">200dp</dimen>
     <dimen name="layout_margin">8dp</dimen>
     <dimen name="tv_padding">1dp</dimen>
     <dimen name="progress_bar_width">100dp</dimen>
     <dimen name="progress_bar_height">100dp</dimen>
+    <dimen name="favorite_btn">50dp</dimen>
+    <dimen name="title_text">18dp</dimen>
+    <dimen name="content_text">12dp</dimen>
+    <dimen name="textview_padding">5dp</dimen>
+    <dimen name="img_margin">1dp</dimen>
 </resources>

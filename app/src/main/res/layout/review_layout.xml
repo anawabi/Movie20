@@ -12,28 +12,28 @@
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryLight"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="@dimen/textview_padding">
 
 
             <TextView
                 android:id="@+id/review_author"
-                android:text="Author"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimaryText"
                 android:textStyle="bold"
-                android:textSize="18dp" />
+                android:textSize="@dimen/title_text" />
 
             <TextView
                 android:id="@+id/review_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="12dp"
+                android:textSize="@dimen/content_text"
                 android:textStyle="bold"
-                android:text="Content" />
+                 />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

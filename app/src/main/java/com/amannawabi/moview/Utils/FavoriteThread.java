@@ -1,9 +1,15 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package com.amannawabi.moview.Utils;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.MainActivity;
 import com.amannawabi.moview.Model.Movies;
 
@@ -20,6 +26,8 @@ import java.util.List;
 public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
     private onFavoriteTaskCompleted mFavoriteTaskCompleted;
     private static final String TAG = "FavoriteThreadHandler";
+    private Movie20Database mMovie20Database;
+
 
     public FavoriteThread(onFavoriteTaskCompleted TaskCompleted) {
 
@@ -41,10 +49,10 @@ public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
     @Override
     protected List<Movies> doInBackground(Void... voids) {
 
-        List<Movies> mMovielist;
 
-        mMovielist = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
-//        Log.d(TAG, "doInBackground: " +mMovielist.size());
+
+        List<Movies> mMovielist = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
+        Log.d(TAG, "doInBackground: " +mMovielist.size());
 
         return mMovielist;
     }

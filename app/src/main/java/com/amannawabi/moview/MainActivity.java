@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.amannawabi.moview.Controller.MovieAdapter;
@@ -45,9 +46,10 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     private URL url;
     public static Movie20Database mMovie20DB;
     private MovieViewModel mMovieViewModel;
-    private Parcelable mSavedMovies;
-    private static Bundle mBundleRecyclerViewState;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private final String SELECTED_MENU_ITEM = "selecteditem";
+    private String mSelectedMenuItem;
+    private MenuItem mMenuItem;
+
 
 
     @Override
@@ -55,17 +57,16 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Started");
+//        Log.d(TAG, "onCreate: Started");
         mRecyclerView = findViewById(R.id.movies_rv);
-        mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "movie20db").allowMainThreadQueries().build();
-
+        mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "favorite_movies")
+                .build();
+//        mSelectedMenuItem = "popular";
         if (savedInstanceState != null) {
-            Log.d(TAG, "onCreate: SavedInstance not Null");
-            mSavedMovies = savedInstanceState.getParcelable(KEY_RECYCLER_STATE);
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(mSavedMovies);
-
+          String mSavedMenuItem = savedInstanceState.getString(SELECTED_MENU_ITEM);
+            Log.d(TAG, "onCreate: selected menu " +mSavedMenuItem);
+          createRecycler(mSavedMenuItem);
         } else {
-
             createRecycler("popular");
             Log.d(TAG, "onCreate: populating new data");
         }
@@ -84,64 +85,45 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
-        Log.d(TAG, "onSaveInstanceState: started");
-        mSavedMovies = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        outState.putParcelable(KEY_RECYCLER_STATE, mSavedMovies);
-//        Log.d(TAG, "onSaveInstanceState: " +outState.getParcelable(KEY_RECYCLER_STATE));
+        outState.putString(SELECTED_MENU_ITEM, mSelectedMenuItem);
+        Log.d(TAG, "onSaveInstanceState: " +mSelectedMenuItem);
         super.onSaveInstanceState(outState);
     }
 
-    //
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.d(TAG, "onRestoreInstanceState: Started");
-        Parcelable listState = savedInstanceState.getParcelable(KEY_RECYCLER_STATE);
-        mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: Started");
-        // restore RecyclerView state
-//        if (mBundleRecyclerViewState != null) {
-//            Log.d(TAG, "onResume: " +mBundleRecyclerViewState);
-//            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-//            mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-//        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.d(TAG, "onStart: started");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: Started");
-        // save RecyclerView state
-//        mBundleRecyclerViewState = new Bundle();
-//        Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-//        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        Log.d(TAG, "onStop: started");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: Started");
-    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+//        createRecycler(sSelectedMenuItem);
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//       parcelable= mRecyclerView.getLayoutManager().onSaveInstanceState();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+//        Log.d(TAG, "onPause: Started " +sSelectedMenuItem);
+//
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+//        Log.d(TAG, "onStop: started " +mSelectedMenuItem);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Log.d(TAG, "onDestroy: Started");
+//    }
 
     /**
      * Generates URL by sending the sort order parameter to Network Utils buildURL method and generates
@@ -202,19 +184,33 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        mMenuItem = menu.findItem(R.id.sort_by_popular);
+        mMenuItem.setChecked(true);
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.sort_by_popular).setChecked(true);
+        mSelectedMenuItem = "popular";
+        return super.onPrepareOptionsMenu(menu);
+
+    }
     /**
      * Enables the user to sort the movie data by Popularity and Highest Rating by providing selectable menu items
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItem = item.getItemId();
+        item.setChecked(false);
         if (selectedItem == R.id.sort_by_popular) {
             createRecycler("popular");
+            mSelectedMenuItem =item.getTitle().toString();
+//            mSelectedMenuItem="popular";
         } else if (selectedItem == R.id.sort_by_top_rated) {
             createRecycler("top_rated");
+            mSelectedMenuItem = "top_rated";
+            mSelectedMenuItem =item.getTitle().toString();
 //            Log.d(TAG, "onOptionsItemSelected: " + url);
         } else if (selectedItem == R.id.favorites) {
             createFavoriteRecycler();
@@ -222,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onFavoriteTaskCompleted(List<Movies> movies) {//        Log.d(TAG, "onTaskCompleted: " + movies.size());

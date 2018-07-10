@@ -12,16 +12,16 @@
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryLight"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="@dimen/textview_padding">
 
             <ImageView
                 android:id="@+id/movie_trailer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="fill"
-                android:layout_margin="1dp"
+                android:layout_margin="@dimen/img_margin"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/movie_poster_description"
                 android:padding="@dimen/layout_margin"
@@ -34,7 +34,7 @@
                 android:padding="@dimen/layout_margin"
                 android:text="Trailer Type"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="14dp"
+                android:textSize="@dimen/title_text"
                 android:textStyle="bold" />
         </LinearLayout>
     </android.support.v7.widget.CardView>

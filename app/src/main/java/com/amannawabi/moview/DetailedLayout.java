@@ -4,24 +4,34 @@
 
 package com.amannawabi.moview;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.amannawabi.moview.Controller.ReviewAdapter;
 import com.amannawabi.moview.Controller.TrailerAdapter;
+import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Model.Review;
 import com.amannawabi.moview.Model.Trailer;
+import com.amannawabi.moview.Utils.FavoritExecutor;
 import com.amannawabi.moview.Utils.ReviewThread;
 import com.amannawabi.moview.Utils.TrailerThread;
 import com.amannawabi.moview.Utils.NetworkUtils;
@@ -33,7 +43,8 @@ import java.net.URL;
 import java.util.List;
 
 
-public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.ListItemClickListener, onTrailerTaskCompleted, onReviewTaskCompleted {
+public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.ListItemClickListener,
+        onTrailerTaskCompleted, onReviewTaskCompleted {
     private static final String TAG = "MovieDetailedLayout";
     private TextView mMovieTitle, mMovieRating, mMovieOverview, mMovieReleaseDate;
     private RecyclerView mTrailerRecyclerView;
@@ -48,13 +59,15 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w780//";
 
     private static String youtubeAdd = "https://www.youtube.com/watch?v=ue80QwXMRHg";
-//    public static Movie20Database mMovie20Database;
+    public static Movie20Database mMovie20Database;
     private FloatingActionButton mFavorite;
+    private ToggleButton toggleButton;
     boolean isFavorite = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_layout);
+        Log.d(TAG, "onCreate: starts");
         mTrailerRecyclerView = findViewById(R.id.trailer_rv);
         mReviewRecyclerView = findViewById(R.id.review_rv);
         mMovieTitle = findViewById(R.id.movie_title);
@@ -62,25 +75,76 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         mMovieRating = findViewById(R.id.movie_rating);
         mMovieOverview = findViewById(R.id.movie_overview);
         mMovieReleaseDate = findViewById(R.id.movie_release_date);
+        mMovie20Database = Movie20Database.getInstance(getApplicationContext());
+//        toggleButton = (ToggleButton) findViewById(R.id.myToggleButton);
+//        toggleButton.setChecked(false);
+//        Log.d(TAG, "onCreate: " + toggleButton.isChecked());
+//   toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                final Movies movies = getIntent().getParcelableExtra("Detail Layout");
+//                if (isChecked) {
+////                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            mMovie20Database.mMovieDAO().addMovie(movies);
+////                            toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.favorite));
+////                        }
+////                    });
+//                    MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
+//                    Toast.makeText(DetailedLayout.this, "Movie Added to Favorite List", Toast.LENGTH_LONG).show();
+//                    toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.favorite));
+//                    Log.d(TAG, "onCheckedChanged: If" +toggleButton.isChecked());
+//                    toggleButton.setChecked(isChecked);
+//                    Log.d(TAG, "onCheckedChanged: If" +toggleButton.isChecked());
+//                }
+//                else {
+////                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+////                        @Override
+////                        public void run() {
+////                            mMovie20Database.mMovieDAO().deleteMovie(movies);
+////                            toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unfavorite));}
+////                    });
+//                    Log.d(TAG, "onCheckedChanged: Else " +toggleButton.isChecked());
+//                    MainActivity.mMovie20DB.mMovieDAO().deleteMovie(movies);
+////                   Toast.makeText(DetailedLayout.this, "Movie Deleted from Favorite List", Toast.LENGTH_SHORT).show();
+//                    toggleButton.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unfavorite));
+//                    toggleButton.setChecked(!isChecked);
+//                    Log.d(TAG, "onCheckedChanged: Else" +toggleButton.isChecked());
+//                }
+//            }
+//        });
         mFavorite = findViewById(R.id.favorite_abtn);
         mFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Movies movies = getIntent().getParcelableExtra("Detail Layout");
-               if(!isFavorite) {
-                   MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
-                   mFavorite.setBackgroundResource(R.drawable.favorite);
-                   Toast.makeText(DetailedLayout.this, "Movie Added to Favorite List", Toast.LENGTH_LONG).show();
+                final Movies movies = getIntent().getParcelableExtra("Detail Layout");
+                if(!isFavorite) {
+                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMovie20Database.mMovieDAO().addMovie(movies);
+                            mFavorite.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.favorite));
+                        }
+                    });
+//                    MainActivity.mMovie20DB.mMovieDAO().addMovie(movies);
+//                    mFavorite.setBackgroundResource(R.drawable.favorite);
+                    Toast.makeText(DetailedLayout.this, "Movie Added to Favorite List", Toast.LENGTH_LONG).show();
                     isFavorite=true;
-               } else{
-                   MainActivity.mMovie20DB.mMovieDAO().deleteMovie(movies);
-                   mFavorite.setBackgroundResource(R.drawable.unfavorite);
-                   Toast.makeText(DetailedLayout.this, "Movie Deleted from Favorite List", Toast.LENGTH_SHORT).show();
+                } else{
+                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMovie20Database.mMovieDAO().deleteMovie(movies);
+                            mFavorite.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unfavorite));}
+                    });
+//                    MainActivity.mMovie20DB.mMovieDAO().deleteMovie(movies);
+//                    mFavorite.setBackgroundResource(R.drawable.unfavorite);
+                    Toast.makeText(DetailedLayout.this, "Movie Deleted from Favorite List", Toast.LENGTH_SHORT).show();
                     isFavorite=false;
-               }
+                }
             }
         });
-
 
         createDetailLayout();
 
@@ -102,14 +166,11 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         mMovieOverview.setText(movies.getMovieOverView());
         String iMovieID = Integer.toString(movies.getMovieId());
 
-
         createTrailerRecycler(iMovieID);
         createReviewRecycler(iMovieID);
         Log.d(TAG, "createDetailLayout: Trailer URL " + mTrailerUrl);
         Log.d(TAG, "createDetailLayout: " + movies.getMovieId());
 
-//        https://www.youtube.com/watch?v=ue80QwXMRHg
-//        https://img.youtube.com/vi/ZJDMWVZta3M/mqdefault.jpg
     }
 
 

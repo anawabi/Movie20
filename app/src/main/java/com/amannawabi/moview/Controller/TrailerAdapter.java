@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
+
 package com.amannawabi.moview.Controller;
 
 import android.content.Context;
@@ -49,7 +54,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     @Override
     public void onBindViewHolder(@NonNull final TrailerViewHolder holder, final int position) {
-        holder.mTrailerType.setText(mTrailerList.get(position).getsName() + " " + position);
+        int count = position+1;
+        holder.mTrailerType.setText(mTrailerList.get(position).getsName() + " " + count);
         Picasso.get().load(THUMNAIL_PATH + mTrailerList.get(position).getsTrailerKey() + THUMBNAIL_EXT).into(holder.mTrailerThumbnail);
         Log.d(TAG, "onBindViewHolder: " + THUMNAIL_PATH + mTrailerList.get(position).getsTrailerKey()+THUMBNAIL_EXT);
     }

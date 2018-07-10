@@ -12,13 +12,15 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryLight">
 
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+              >
 
                 <ImageView
                     android:id="@+id/movie_poster"
@@ -141,7 +143,7 @@
                     android:id="@+id/movie_overview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/layout_margin"
                     android:layout_marginEnd="@dimen/layout_margin"
                     android:layout_marginLeft="@dimen/layout_margin"
                     android:layout_marginRight="@dimen/layout_margin"
@@ -153,13 +155,32 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/movie_overview_caption" />
 
+                <!--<ToggleButton-->
+                    <!--android:id="@+id/myToggleButton"-->
+                    <!--android:layout_width="@dimen/favorite_btn"-->
+                    <!--android:layout_height="@dimen/favorite_btn"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginBottom="@dimen/layout_margin"-->
+                    <!--android:layout_marginEnd="@dimen/layout_margin"-->
+                    <!--android:layout_marginLeft="@dimen/layout_margin"-->
+                    <!--android:layout_marginRight="@dimen/layout_margin"-->
+                    <!--android:layout_marginStart="@dimen/layout_margin"-->
+                    <!--android:layout_marginTop="@dimen/layout_margin"-->
+                    <!--android:textOff=""-->
+                    <!--android:textOn=""-->
+                    <!--app:layout_constraintBottom_toBottomOf="@+id/movie_poster"-->
+                    <!--app:layout_constraintEnd_toEndOf="@+id/movie_poster"-->
+                    <!--app:layout_constraintHorizontal_bias="1.0"-->
+                    <!--app:layout_constraintStart_toStartOf="@+id/movie_poster"-->
+                    <!--app:layout_constraintTop_toTopOf="@+id/movie_poster"-->
+                    <!--app:layout_constraintVertical_bias="1.0" />-->
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/favorite_abtn"
-                    android:layout_width="36dp"
-                    android:layout_height="45dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:clickable="true"
+                    android:scaleType="fitXY"
                     app:backgroundTint="@android:color/background_light"
                     app:layout_constraintBottom_toBottomOf="@+id/movie_poster"
                     app:layout_constraintEnd_toEndOf="@+id/movie_poster"
@@ -172,16 +193,16 @@
                 android:id="@+id/trailer_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/layout_margin"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginStart="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_margin"
                 app:layout_constraintBottom_toTopOf="@+id/review_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/trailer_rv"
@@ -194,18 +215,19 @@
 
             <RelativeLayout
                 android:id="@+id/review_layout"
-                android:layout_width="match_parent"
-                android:layout_height="93dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/layout_margin"
+                android:layout_marginEnd="@dimen/layout_margin"
+                android:layout_marginLeft="@dimen/layout_margin"
+                android:layout_marginRight="@dimen/layout_margin"
+                android:layout_marginStart="@dimen/layout_margin"
+                android:layout_marginTop="@dimen/layout_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/trailer_layout">
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/review_rv"
