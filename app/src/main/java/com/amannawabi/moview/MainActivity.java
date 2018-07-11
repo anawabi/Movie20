@@ -214,8 +214,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
 //            Log.d(TAG, "onOptionsItemSelected: " + url);
         } else if (selectedItem == R.id.favorites) {
             createFavoriteRecycler();
-            Toast.makeText(MainActivity.this, "You Clicked Favorite", Toast.LENGTH_SHORT).show();
-        }
+           }
         return super.onOptionsItemSelected(item);
     }
 
