@@ -14,13 +14,12 @@ import com.amannawabi.moview.Model.Movies;
 import java.util.List;
 
 public class MovieRepository {
-    private MovieDAO mMovieDao;
-    private LiveData<List<Movies>> mAllMovies;
+    private final LiveData<List<Movies>> mAllMovies;
 
     public MovieRepository(Application application) {
         Movie20Database db = Movie20Database.getInstance(application);
-        mMovieDao = db.mMovieDAO();
-        mAllMovies = mMovieDao.getAllMovies();
+        MovieDAO movieDao = db.mMovieDAO();
+        mAllMovies = movieDao.getAllMovies();
 
     }
 

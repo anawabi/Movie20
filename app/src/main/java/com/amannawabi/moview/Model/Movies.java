@@ -4,8 +4,6 @@
 
 package com.amannawabi.moview.Model;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -14,7 +12,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
 
 /**
  * Generates Data Model class and sets the setter and getter methods and send the data by implementing

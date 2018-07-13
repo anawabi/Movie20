@@ -5,7 +5,6 @@
 package com.amannawabi.moview.Utils;
 
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,9 +12,6 @@ import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.MainActivity;
 import com.amannawabi.moview.Model.Movies;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +20,7 @@ import java.util.List;
  */
 
 public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
-    private onFavoriteTaskCompleted mFavoriteTaskCompleted;
+    private final onFavoriteTaskCompleted mFavoriteTaskCompleted;
     private static final String TAG = "FavoriteThreadHandler";
     private Movie20Database mMovie20Database;
 

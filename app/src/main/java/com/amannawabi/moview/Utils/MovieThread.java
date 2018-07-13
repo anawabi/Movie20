@@ -7,8 +7,6 @@ package com.amannawabi.moview.Utils;
 
 import android.os.AsyncTask;
 
-import android.util.Log;
-
 
 import com.amannawabi.moview.Model.Movies;
 
@@ -23,7 +21,7 @@ import java.util.List;
  */
 
 public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
-    private onTaskCompleted mTaskCompleted;
+    private final onTaskCompleted mTaskCompleted;
     private static final String TAG = "MovieHttpHandler";
 
     public MovieThread(onTaskCompleted TaskCompleted) {

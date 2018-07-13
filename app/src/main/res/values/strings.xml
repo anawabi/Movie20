@@ -9,16 +9,16 @@
     <string name="movie_rating">Rating:</string>
     <string name="movie_released">Released:</string>
     <string name="movie_overview">Overview:</string>
-    <string name="trailer_rv_title">Trailers</string>
-    <string name="review_rv_title">Reviews</string>
+    <string name="network_status">Network disconnected Please connect to internet</string>
+    <string name="trailer_type">Trailer Type</string>
     <dimen name="detail_poster_image">200dp</dimen>
     <dimen name="layout_margin">8dp</dimen>
     <dimen name="tv_padding">1dp</dimen>
     <dimen name="progress_bar_width">100dp</dimen>
     <dimen name="progress_bar_height">100dp</dimen>
     <dimen name="favorite_btn">50dp</dimen>
-    <dimen name="title_text">18dp</dimen>
-    <dimen name="content_text">12dp</dimen>
+    <dimen name="title_text">18sp</dimen>
+    <dimen name="content_text">12sp</dimen>
     <dimen name="textview_padding">5dp</dimen>
     <dimen name="img_margin">1dp</dimen>
 </resources>

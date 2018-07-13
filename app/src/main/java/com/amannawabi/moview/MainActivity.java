@@ -9,7 +9,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.amannawabi.moview.Controller.MovieAdapter;
@@ -40,16 +38,17 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         onTaskCompleted, MovieAdapter.ListItemClickListener {
 
     private RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter mAdapter;
     private static final String TAG = "MovieMainActivity";
     private static List<Movies> mMovieList = new ArrayList<>();
-    private URL url;
     public static Movie20Database mMovie20DB;
-    private MovieViewModel mMovieViewModel;
     private final String SELECTED_MENU_ITEM = "selecteditem";
     private String mSelectedMenuItem;
-    private MenuItem mMenuItem;
-
+    private final String RECYCLER_POSITION_KEY = "recycler_position";
+    private int mPosition = RecyclerView.NO_POSITION;
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleState;
+    private GridLayoutManager mLayoutManager;
 
 
     @Override
@@ -59,24 +58,39 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         setContentView(R.layout.activity_main);
 //        Log.d(TAG, "onCreate: Started");
         mRecyclerView = findViewById(R.id.movies_rv);
+        mLayoutManager = new GridLayoutManager(this, 2);
         mMovie20DB = Room.databaseBuilder(getApplicationContext(), Movie20Database.class, "favorite_movies")
                 .build();
-//        mSelectedMenuItem = "popular";
+
+
         if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(RECYCLER_POSITION_KEY)) {
+                mPosition = savedInstanceState.getInt(RECYCLER_POSITION_KEY);
+                if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+                // Scroll the RecyclerView to mPosition
+                Log.d(TAG, "onCreate: " + RECYCLER_POSITION_KEY);
+                Log.d(TAG, "onCreate: " +mPosition);
+                mRecyclerView.smoothScrollToPosition(mPosition);
+            }
           String mSavedMenuItem = savedInstanceState.getString(SELECTED_MENU_ITEM);
             Log.d(TAG, "onCreate: selected menu " +mSavedMenuItem);
-          createRecycler(mSavedMenuItem);
-        } else {
+            if (mSavedMenuItem != null) {
+                createRecycler(mSavedMenuItem);
+            }
+            else {
+                createRecycler("popular");
+            }
+        }
+        else {
             createRecycler("popular");
-            Log.d(TAG, "onCreate: populating new data");
         }
 
         final MovieAdapter movieAdapter = new MovieAdapter(this);
-        mMovieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        mMovieViewModel.getAllMovies().observe(this, new Observer<List<Movies>>() {
+        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        movieViewModel.getAllMovies().observe(this, new Observer<List<Movies>>() {
             @Override
             public void onChanged(@Nullable List<Movies> movies) {
-                movieAdapter.setMoviess(movies);
+                movieAdapter.setMovies(movies);
 
             }
         });
@@ -85,45 +99,35 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(RECYCLER_POSITION_KEY,  mLayoutManager.findFirstCompletelyVisibleItemPosition());
         outState.putString(SELECTED_MENU_ITEM, mSelectedMenuItem);
-        Log.d(TAG, "onSaveInstanceState: " +mSelectedMenuItem);
         super.onSaveInstanceState(outState);
     }
 
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
-//        createRecycler(sSelectedMenuItem);
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//       parcelable= mRecyclerView.getLayoutManager().onSaveInstanceState();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
-//        Log.d(TAG, "onPause: Started " +sSelectedMenuItem);
-//
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
-//        Log.d(TAG, "onStop: started " +mSelectedMenuItem);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Log.d(TAG, "onDestroy: Started");
-//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBundleState != null) {
+            mPosition = mBundleState.getInt(RECYCLER_POSITION_KEY);
+            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+            Log.d(TAG, "onResume: " +RECYCLER_POSITION_KEY);
+            Log.d(TAG, "onResume: " +mPosition);
+            // Scroll the RecyclerView to mPosition
+            mRecyclerView.smoothScrollToPosition(mPosition);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBundleState = new Bundle();
+        mPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+        mBundleState.putInt(RECYCLER_POSITION_KEY, mPosition);
+        mBundleState.putString(SELECTED_MENU_ITEM, mSelectedMenuItem);
+
+    }
 
     /**
      * Generates URL by sending the sort order parameter to Network Utils buildURL method and generates
@@ -132,16 +136,17 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     private void createRecycler(String sortBy) {
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        url = NetworkUtils.buildURL(sortBy);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        URL url = NetworkUtils.buildURL(sortBy);
 //        Log.d(TAG, "onCreate: URL Generated" + url);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
             MovieThread movieQuery = new MovieThread(MainActivity.this);
             movieQuery.execute(url);
         } else {
+            String sNetworkStatus = getString(R.string.network_status);
             createFavoriteRecycler();
-            Toast.makeText(MainActivity.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, sNetworkStatus, Toast.LENGTH_LONG).show();
         }
 
     }
@@ -184,18 +189,11 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        mMenuItem = menu.findItem(R.id.sort_by_popular);
-        mMenuItem.setChecked(true);
+        MenuItem menuItem = menu.findItem(R.id.sort_by_popular);
+        menuItem.setChecked(true);
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.sort_by_popular).setChecked(true);
-        mSelectedMenuItem = "popular";
-        return super.onPrepareOptionsMenu(menu);
-
-    }
     /**
      * Enables the user to sort the movie data by Popularity and Highest Rating by providing selectable menu items
      */
@@ -203,18 +201,22 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItem = item.getItemId();
         item.setChecked(false);
-        if (selectedItem == R.id.sort_by_popular) {
-            createRecycler("popular");
-            mSelectedMenuItem =item.getTitle().toString();
+        switch (selectedItem) {
+            case R.id.sort_by_popular:
+                createRecycler("popular");
+                mSelectedMenuItem = item.getTitle().toString();
 //            mSelectedMenuItem="popular";
-        } else if (selectedItem == R.id.sort_by_top_rated) {
-            createRecycler("top_rated");
-            mSelectedMenuItem = "top_rated";
-            mSelectedMenuItem =item.getTitle().toString();
+                break;
+            case R.id.sort_by_top_rated:
+                createRecycler("top_rated");
+                mSelectedMenuItem = "top_rated";
+                mSelectedMenuItem = item.getTitle().toString();
 //            Log.d(TAG, "onOptionsItemSelected: " + url);
-        } else if (selectedItem == R.id.favorites) {
-            createFavoriteRecycler();
-           }
+                break;
+            case R.id.favorites:
+                createFavoriteRecycler();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

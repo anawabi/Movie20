@@ -24,7 +24,7 @@ import com.amannawabi.moview.Data.Movie20Database;
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Model.Review;
 import com.amannawabi.moview.Model.Trailer;
-import com.amannawabi.moview.Utils.FavoritExecutor;
+import com.amannawabi.moview.Utils.FavoriteExecutor;
 import com.amannawabi.moview.Utils.ReviewThread;
 import com.amannawabi.moview.Utils.TrailerThread;
 import com.amannawabi.moview.Utils.NetworkUtils;
@@ -42,16 +42,13 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     private TextView mMovieTitle, mMovieRating, mMovieOverview, mMovieReleaseDate;
     private RecyclerView mTrailerRecyclerView;
     private RecyclerView mReviewRecyclerView;
-    private RecyclerView.Adapter mTrailerAdapter;
-    private RecyclerView.Adapter mReviewAdapter;
     private ImageView mMoviePoster;
     private String iMovieRating;
     private URL mTrailerUrl;
-    private URL mReviewUrl;
     private List<Trailer> sMovieTrailerRef;
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w780//";
 //    private static String youtubeAdd = "https://www.youtube.com/watch?v=ue80QwXMRHg";
-    public static Movie20Database mMovie20Database;
+    private static Movie20Database mMovie20Database;
     private ToggleButton toggleButton;
 
 
@@ -69,7 +66,7 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         mMovieReleaseDate = findViewById(R.id.movie_release_date);
         mMovie20Database = Movie20Database.getInstance(getApplicationContext());
         toggleButton = findViewById(R.id.favorite_abtn);
-        FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+        FavoriteExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 final Movies movies = getIntent().getParcelableExtra("Detail Layout");
@@ -90,7 +87,7 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 final Movies movies = getIntent().getParcelableExtra("Detail Layout");
                 if (isChecked) {
-                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+                    FavoriteExecutor.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             mMovie20Database.mMovieDAO().addMovie(movies);
@@ -99,7 +96,7 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
                     });
                 }
                 else {
-                    FavoritExecutor.getInstance().diskIO().execute(new Runnable() {
+                    FavoriteExecutor.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             mMovie20Database.mMovieDAO().deleteMovie(movies);
@@ -115,13 +112,13 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
      * Sets the movie data into UI components in Detail Activity
      */
     private void createDetailLayout() {
-        final String RATING = "/10";
+        final String RATING = iMovieRating + "/10";
         Intent intent = getIntent();
         Movies movies = intent.getParcelableExtra("Detail Layout");
         iMovieRating = movies.getRatings();
         mMovieTitle.setText(movies.getMovieTitle());
         Picasso.get().load(POSTER_PATH + movies.getMoviePoster()).into(mMoviePoster);
-        mMovieRating.setText(iMovieRating + RATING);
+        mMovieRating.setText(RATING);
         mMovieReleaseDate.setText(movies.getReleaseDate().substring(0, 4));
         mMovieOverview.setText(movies.getMovieOverView());
         String iMovieID = Integer.toString(movies.getMovieId());
@@ -152,12 +149,12 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     private void createReviewRecycler(String iMovieID) {
         mReviewRecyclerView.setHasFixedSize(true);
         mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        mReviewUrl = NetworkUtils.buildReviewURL(iMovieID);
+        URL reviewUrl = NetworkUtils.buildReviewURL(iMovieID);
         boolean isNetworkConnected = NetworkUtils.isNetworkConnected(this);
         if (isNetworkConnected) {
             ReviewThread reviewQuery = new ReviewThread(DetailedLayout.this);
 
-            reviewQuery.execute(mReviewUrl);
+            reviewQuery.execute(reviewUrl);
         } else {
             Toast.makeText(DetailedLayout.this, "Network disconnected\n Please connect to internet", Toast.LENGTH_LONG).show();
         }
@@ -169,14 +166,14 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
 
         sMovieTrailerRef = mTrailerList;
 //        Log.d(TAG, "onTaskCompleted2: " + sMovieTrailerRef.size());
-        mTrailerAdapter = new TrailerAdapter(sMovieTrailerRef, DetailedLayout.this);
-        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+        RecyclerView.Adapter trailerAdapter = new TrailerAdapter(sMovieTrailerRef, DetailedLayout.this);
+        mTrailerRecyclerView.setAdapter(trailerAdapter);
     }
 
     @Override
     public void onReviewTaskCompleted(List<Review> mReviewList) {
-        mReviewAdapter = new ReviewAdapter(mReviewList);
-        mReviewRecyclerView.setAdapter(mReviewAdapter);
+        RecyclerView.Adapter reviewAdapter = new ReviewAdapter(mReviewList);
+        mReviewRecyclerView.setAdapter(reviewAdapter);
     }
 
     @Override

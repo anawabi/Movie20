@@ -7,26 +7,26 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class FavoritExecutor {
+public class FavoriteExecutor {
 
 
     // For Singleton instantiation
     private static final Object LOCK = new Object();
-    private static FavoritExecutor sInstance;
+    private static FavoriteExecutor sInstance;
     private final Executor diskIO;
     private final Executor mainThread;
     private final Executor networkIO;
 
-    private FavoritExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
+    private FavoriteExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
         this.diskIO = diskIO;
         this.networkIO = networkIO;
         this.mainThread = mainThread;
     }
 
-    public static FavoritExecutor getInstance() {
+    public static FavoriteExecutor getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
-                sInstance = new FavoritExecutor(Executors.newSingleThreadExecutor(),
+                sInstance = new FavoriteExecutor(Executors.newSingleThreadExecutor(),
                         Executors.newFixedThreadPool(3),
                         new MainThreadExecutor());
             }
@@ -47,7 +47,7 @@ public class FavoritExecutor {
     }
 
     private static class MainThreadExecutor implements Executor {
-        private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+        private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
         @Override
         public void execute(@NonNull Runnable command) {

@@ -15,13 +15,12 @@ import java.util.List;
 
 public class MovieViewModel extends AndroidViewModel {
 
-    MovieRepository mRepository;
-    LiveData<List<Movies>> mAllMovies;
+    private final LiveData<List<Movies>> mAllMovies;
 
     public MovieViewModel(@NonNull Application application) {
         super(application);
-        mRepository = new MovieRepository(application);
-        mAllMovies = mRepository.getAllMovies();
+        MovieRepository repository = new MovieRepository(application);
+        mAllMovies = repository.getAllMovies();
     }
 
     public LiveData<List<Movies>> getAllMovies(){

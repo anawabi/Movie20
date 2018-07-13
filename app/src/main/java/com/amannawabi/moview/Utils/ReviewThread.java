@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amannawabi.moview.Model.Review;
-import com.amannawabi.moview.Model.Trailer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +17,7 @@ import java.util.List;
 public class ReviewThread extends AsyncTask<URL, Void, List<Review>> {
 
     //    public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
-    private onReviewTaskCompleted mReviewTaskCompleted;
+    private final onReviewTaskCompleted mReviewTaskCompleted;
     private static final String TAG = "MovieHttpHandlerTrailer";
 
     public ReviewThread(onReviewTaskCompleted reviewTaskCompleted) {

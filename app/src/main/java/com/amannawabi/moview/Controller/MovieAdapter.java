@@ -7,13 +7,10 @@ package com.amannawabi.moview.Controller;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
 
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.R;
@@ -30,7 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
 
     private List<Movies> mMovies;
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185//";
-    private static final String TAG = "MovieAdapter";
+    // --Commented out by Inspection (7/12/2018 7:22 PM):private static final String TAG = "MovieAdapter";
 
     final private ListItemClickListener mOnClickListener;
 
@@ -90,14 +87,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
 //        Log.d(TAG, "getItemCount: " + mMovies.size());
         return mMovies.size();
     }
-    public void setMoviess(List<Movies> movies){
+    public void setMovies(List<Movies> movies){
         mMovies = movies;
         notifyDataSetChanged();
     }
     public class movieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView mPoster;
 
-        public movieViewHolder(View view) {
+        movieViewHolder(View view) {
             super(view);
             mPoster = view.findViewById(R.id.movie_poster);
             view.setOnClickListener(this);
@@ -105,7 +102,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.movieViewHol
         }
 
         /**
-         * Generates onClick event for the items in Recycler view by identifyind their position
+         * Generates onClick event for the items in Recycler view by identified their position
          */
         @Override
         public void onClick(View v) {

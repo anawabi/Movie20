@@ -5,7 +5,6 @@
 package com.amannawabi.moview.Utils;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.amannawabi.moview.Model.Trailer;
 
@@ -18,12 +17,12 @@ import java.util.List;
 public class TrailerThread extends AsyncTask<URL, Void, List<Trailer>> {
 
     //    public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
-    private onTrailerTaskCompleted mTaskFinishwd;
+    private final onTrailerTaskCompleted mTaskFinished;
     private static final String TAG = "MovieHttpHandlerTrailer";
 
     public TrailerThread(onTrailerTaskCompleted onTrailerTaskCompleted) {
 
-        mTaskFinishwd = onTrailerTaskCompleted;
+        mTaskFinished = onTrailerTaskCompleted;
     }
 
     @Override
@@ -68,7 +67,7 @@ public class TrailerThread extends AsyncTask<URL, Void, List<Trailer>> {
     @Override
     protected void onPostExecute(List<Trailer> mTrailerList) {
         super.onPostExecute(mTrailerList);
-        mTaskFinishwd.onTrailerTaskCompleted(mTrailerList);
+        mTaskFinished.onTrailerTaskCompleted(mTrailerList);
 
     }
 

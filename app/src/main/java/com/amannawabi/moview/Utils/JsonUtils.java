@@ -4,8 +4,6 @@
 
 package com.amannawabi.moview.Utils;
 
-import android.util.Log;
-
 import com.amannawabi.moview.Model.Movies;
 import com.amannawabi.moview.Model.Review;
 import com.amannawabi.moview.Model.Trailer;
@@ -17,7 +15,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonUtils {
+class JsonUtils {
     private static final String TAG = "MovieJsonUtils";
 
     /**
@@ -52,7 +50,7 @@ public class JsonUtils {
     public static List<Trailer> parseTrailerJson(String json) {
 
         List<Trailer> mTrailerList = new ArrayList<>();
-        Trailer mTrailer = null;
+        Trailer mTrailer;
         try {
             JSONObject response = new JSONObject(json);
             JSONArray resultArray = response.getJSONArray("results");
@@ -79,7 +77,7 @@ public class JsonUtils {
     public static List<Review> parseReviewJson(String json) {
 
         List<Review> mReviewList = new ArrayList<>();
-        Review mReview = null;
+        Review mReview;
         try {
             JSONObject response = new JSONObject(json);
             JSONArray resultArray = response.getJSONArray("results");

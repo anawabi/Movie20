@@ -4,23 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:background="@color/colorPrimary">
+   android:background="@color/colorPrimary"
+    tools:ignore="Overdraw">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/movie_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="500dp"
             android:background="@color/colorPrimaryLight">
 
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout"
+                android:id="@+id/parent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-              >
+                android:layout_marginTop="8dp"
+               >
 
                 <ImageView
                     android:id="@+id/movie_poster"
@@ -190,8 +193,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/review_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
-
+                app:layout_constraintTop_toBottomOf="@+id/parent_layout">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/trailer_rv"
@@ -216,7 +218,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/trailer_layout">
-
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/review_rv"

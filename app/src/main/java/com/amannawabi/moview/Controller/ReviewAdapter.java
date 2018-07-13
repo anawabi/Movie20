@@ -13,15 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.amannawabi.moview.Model.Review;
-import com.amannawabi.moview.Model.Trailer;
 import com.amannawabi.moview.R;
 
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private List<Review> mReviewList;
-    private static final String TAG = "MovieReviewAdapter";
+    private final List<Review> mReviewList;
+    // --Commented out by Inspection (7/12/2018 7:22 PM):private static final String TAG = "MovieReviewAdapter";
 
     public ReviewAdapter(List<Review> reviewList) {
         mReviewList = reviewList;
@@ -31,7 +30,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_layout_rv, parent, false);
 
         return new ReviewViewHolder(view);
 
@@ -40,7 +39,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         int count = position+1;
-        holder.mReviewAuthor.setText(mReviewList.get(position).getsAuthor() + " " + count);
+        String sAuthors = mReviewList.get(position).getsAuthor() + " " + count;
+        holder.mReviewAuthor.setText(sAuthors);
         holder.mReviewContent.setText(mReviewList.get(position).getsContent());
 
     }
@@ -51,10 +51,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView mReviewAuthor;
-        TextView mReviewContent;
+        final TextView mReviewAuthor;
+        final TextView mReviewContent;
 
-        public ReviewViewHolder(View itemView) {
+        ReviewViewHolder(View itemView) {
             super(itemView);
             mReviewAuthor = itemView.findViewById(R.id.review_author);
             mReviewContent = itemView.findViewById(R.id.review_content);
