@@ -18,7 +18,7 @@ public class TrailerThread extends AsyncTask<URL, Void, List<Trailer>> {
 
     //    public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
     private final onTrailerTaskCompleted mTaskFinished;
-    private static final String TAG = "MovieHttpHandlerTrailer";
+    private static final String TAG = "TrailerThread";
 
     public TrailerThread(onTrailerTaskCompleted onTrailerTaskCompleted) {
 

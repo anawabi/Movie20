@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.amannawabi.moview.Data.Movie20Database;
+import com.amannawabi.moview.DetailedLayout;
 import com.amannawabi.moview.MainActivity;
 import com.amannawabi.moview.Model.Movies;
 
@@ -44,8 +45,6 @@ public class FavoriteThread extends AsyncTask<Void, Void, List<Movies>> {
      */
     @Override
     protected List<Movies> doInBackground(Void... voids) {
-
-
 
         List<Movies> mMovielist = MainActivity.mMovie20DB.mMovieDAO().viewMovie();
         Log.d(TAG, "doInBackground: " +mMovielist.size());

@@ -53,7 +53,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         String sName = mTrailerList.get(position).getsName() + " " + count;
         holder.mTrailerType.setText(sName);
         Picasso.get().load(THUMBNAIL_PATH + mTrailerList.get(position).getsTrailerKey() + THUMBNAIL_EXT).into(holder.mTrailerThumbnail);
-        Log.d(TAG, "onBindViewHolder: " + THUMBNAIL_PATH + mTrailerList.get(position).getsTrailerKey()+THUMBNAIL_EXT);
+//        Log.d(TAG, "onBindViewHolder: " + THUMBNAIL_PATH + mTrailerList.get(position).getsTrailerKey()+THUMBNAIL_EXT);
     }
 
     @Override

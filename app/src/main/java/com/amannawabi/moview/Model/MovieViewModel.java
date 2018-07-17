@@ -8,6 +8,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.amannawabi.moview.Utils.MovieRepository;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class MovieViewModel extends AndroidViewModel {
 
+    private static final String TAG = "MovieViewModel";
     private final LiveData<List<Movies>> mAllMovies;
 
     public MovieViewModel(@NonNull Application application) {
@@ -24,6 +26,7 @@ public class MovieViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Movies>> getAllMovies(){
+//        Log.d(TAG, "getAllMovies: invoked " +mAllMovies.toString());
         return mAllMovies;
     }
 }

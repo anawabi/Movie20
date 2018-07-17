@@ -9,6 +9,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,10 +44,9 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     private static List<Movies> mMovieList = new ArrayList<>();
     public static Movie20Database mMovie20DB;
     private final String SELECTED_MENU_ITEM = "selecteditem";
-    private String mSelectedMenuItem;
+    private static String mSelectedMenuItem;
     private final String RECYCLER_POSITION_KEY = "recycler_position";
     private int mPosition = RecyclerView.NO_POSITION;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
     private static Bundle mBundleState;
     private GridLayoutManager mLayoutManager;
 
@@ -67,13 +67,10 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
             if (savedInstanceState.containsKey(RECYCLER_POSITION_KEY)) {
                 mPosition = savedInstanceState.getInt(RECYCLER_POSITION_KEY);
                 if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-                // Scroll the RecyclerView to mPosition
-                Log.d(TAG, "onCreate: " + RECYCLER_POSITION_KEY);
-                Log.d(TAG, "onCreate: " +mPosition);
                 mRecyclerView.smoothScrollToPosition(mPosition);
             }
           String mSavedMenuItem = savedInstanceState.getString(SELECTED_MENU_ITEM);
-            Log.d(TAG, "onCreate: selected menu " +mSavedMenuItem);
+//            Log.d(TAG, "onCreate: selected menu " +mSavedMenuItem);
             if (mSavedMenuItem != null) {
                 createRecycler(mSavedMenuItem);
             }
@@ -91,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
             @Override
             public void onChanged(@Nullable List<Movies> movies) {
                 movieAdapter.setMovies(movies);
+//                Log.d(TAG, "onChanged: called in Oncreate");
 
             }
         });
@@ -104,30 +102,43 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         super.onSaveInstanceState(outState);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mBundleState != null) {
-            mPosition = mBundleState.getInt(RECYCLER_POSITION_KEY);
-            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-            Log.d(TAG, "onResume: " +RECYCLER_POSITION_KEY);
-            Log.d(TAG, "onResume: " +mPosition);
-            // Scroll the RecyclerView to mPosition
-            mRecyclerView.smoothScrollToPosition(mPosition);
-        }
-
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
         mBundleState = new Bundle();
-        mPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
-        mBundleState.putInt(RECYCLER_POSITION_KEY, mPosition);
-        mBundleState.putString(SELECTED_MENU_ITEM, mSelectedMenuItem);
+        int mRVPosition = mLayoutManager.findLastCompletelyVisibleItemPosition();
+        Log.d(TAG, "onPause: " +mRVPosition);
+        mBundleState.putInt(RECYCLER_POSITION_KEY, mRVPosition);
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//
+        if (mBundleState != null) {
+            if (mBundleState.containsKey(RECYCLER_POSITION_KEY)) {
+                int mRVPosition = mBundleState.getInt(RECYCLER_POSITION_KEY);
+                if (mRVPosition == RecyclerView.NO_POSITION) mRVPosition = 0;
+                // Scroll the RecyclerView to mPosition
+                Log.d(TAG, "onResume: " + RECYCLER_POSITION_KEY);
+                Log.d(TAG, "onResume: " +mRVPosition);
+                mRecyclerView.smoothScrollToPosition(mRVPosition);
+            }
+        }
+        final MovieAdapter movieAdapter = new MovieAdapter(this);
+        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        movieViewModel.getAllMovies().observe(this, new Observer<List<Movies>>() {
+            @Override
+            public void onChanged(@Nullable List<Movies> movies) {
+                movieAdapter.setMovies(movies);
+//                Log.d(TAG, "onChanged: called in Oncreate");
+
+            }
+        });
+
+    }
+
 
     /**
      * Generates URL by sending the sort order parameter to Network Utils buildURL method and generates
@@ -209,12 +220,13 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
                 break;
             case R.id.sort_by_top_rated:
                 createRecycler("top_rated");
-                mSelectedMenuItem = "top_rated";
+//                mSelectedMenuItem = "top_rated";
                 mSelectedMenuItem = item.getTitle().toString();
 //            Log.d(TAG, "onOptionsItemSelected: " + url);
                 break;
             case R.id.favorites:
                 createFavoriteRecycler();
+//                mSelectedMenuItem = item.getTitle().toString();
                 break;
         }
         return super.onOptionsItemSelected(item);

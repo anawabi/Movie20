@@ -56,7 +56,7 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_layout);
-        Log.d(TAG, "onCreate: starts");
+//        Log.d(TAG, "onCreate: starts");
         mTrailerRecyclerView = findViewById(R.id.trailer_rv);
         mReviewRecyclerView = findViewById(R.id.review_rv);
         mMovieTitle = findViewById(R.id.movie_title);
@@ -64,7 +64,8 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         mMovieRating = findViewById(R.id.movie_rating);
         mMovieOverview = findViewById(R.id.movie_overview);
         mMovieReleaseDate = findViewById(R.id.movie_release_date);
-        mMovie20Database = Movie20Database.getInstance(getApplicationContext());
+        mMovie20Database = MainActivity.mMovie20DB;
+//                Movie20Database.getInstance(getApplicationContext());
         toggleButton = findViewById(R.id.favorite_abtn);
         FavoriteExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
@@ -81,7 +82,7 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
         });
 
         toggleButton.setChecked(false);
-        Log.d(TAG, "onCreate: " + toggleButton.isChecked());
+//        Log.d(TAG, "onCreate: " + toggleButton.isChecked());
    toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -112,20 +113,21 @@ public class DetailedLayout extends AppCompatActivity implements TrailerAdapter.
      * Sets the movie data into UI components in Detail Activity
      */
     private void createDetailLayout() {
-        final String RATING = iMovieRating + "/10";
+        String RATING =" ";
         Intent intent = getIntent();
         Movies movies = intent.getParcelableExtra("Detail Layout");
         iMovieRating = movies.getRatings();
         mMovieTitle.setText(movies.getMovieTitle());
         Picasso.get().load(POSTER_PATH + movies.getMoviePoster()).into(mMoviePoster);
+        RATING = iMovieRating + "/10";
         mMovieRating.setText(RATING);
         mMovieReleaseDate.setText(movies.getReleaseDate().substring(0, 4));
         mMovieOverview.setText(movies.getMovieOverView());
         String iMovieID = Integer.toString(movies.getMovieId());
         createTrailerRecycler(iMovieID);
         createReviewRecycler(iMovieID);
-        Log.d(TAG, "createDetailLayout: Trailer URL " + mTrailerUrl);
-        Log.d(TAG, "createDetailLayout: " + movies.getMovieId());
+//        Log.d(TAG, "createDetailLayout: Trailer URL " + mTrailerUrl);
+//        Log.d(TAG, "createDetailLayout: " + movies.getMovieId());
 
     }
 

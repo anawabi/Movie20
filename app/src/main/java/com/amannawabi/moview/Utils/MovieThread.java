@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
     private final onTaskCompleted mTaskCompleted;
-    private static final String TAG = "MovieHttpHandler";
+    private static final String TAG = "MovieThread";
 
     public MovieThread(onTaskCompleted TaskCompleted) {
 

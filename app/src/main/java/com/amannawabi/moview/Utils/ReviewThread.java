@@ -18,7 +18,7 @@ public class ReviewThread extends AsyncTask<URL, Void, List<Review>> {
 
     //    public class MovieThread extends AsyncTask<URL, Void, List<Movies>> {
     private final onReviewTaskCompleted mReviewTaskCompleted;
-    private static final String TAG = "MovieHttpHandlerTrailer";
+    private static final String TAG = "ReviewThread";
 
     public ReviewThread(onReviewTaskCompleted reviewTaskCompleted) {
         mReviewTaskCompleted = reviewTaskCompleted;
@@ -49,7 +49,7 @@ public class ReviewThread extends AsyncTask<URL, Void, List<Review>> {
 
             mReviewList = JsonUtils.parseReviewJson(jSonData);
 
-            Log.d(TAG, "doInBackground: " + mReviewList.size());
+//            Log.d(TAG, "doInBackground: " + mReviewList.size());
 
         } catch (IOException e) {
             e.printStackTrace();
