@@ -16,7 +16,7 @@ import com.amannawabi.movie20.Model.Movies;
 import java.util.List;
 
 public class MovieRepository {
-    private MovieDAO mMovieDAO;
+    private final MovieDAO mMovieDAO;
     private final LiveData<List<Movies>> mAllMovies;
     private static final String TAG = "MovieRepository";
 
@@ -37,7 +37,7 @@ public class MovieRepository {
 
     private static class insertAsyncTask extends AsyncTask<Movies, Void, Void>{
 
-        private MovieDAO mAsyncDAO;
+        private final MovieDAO mAsyncDAO;
 
         insertAsyncTask(MovieDAO movieDAO){
             mAsyncDAO = movieDAO;

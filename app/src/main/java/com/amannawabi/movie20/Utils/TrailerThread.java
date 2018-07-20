@@ -25,12 +25,6 @@ public class TrailerThread extends AsyncTask<URL, Void, List<Trailer>> {
         mTaskFinished = onTrailerTaskCompleted;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-//        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
     /**
      * Get the URL and starts the getting data from server in background thread and send
      * the data to JSON parser for parsing and stores it in Array List to be sent to UI thread

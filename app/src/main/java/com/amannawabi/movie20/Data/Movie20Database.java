@@ -14,8 +14,6 @@ import com.amannawabi.movie20.Model.Movies;
 @Database(entities = Movies.class, version = 1_1, exportSchema = false)
 public abstract class Movie20Database extends RoomDatabase {
 
-    private static final String LOG_TAG = Movie20Database.class.getSimpleName();
-    private static final Object LOCK = new Object();
     private static final String DB_NAME = "favorite_movies";
     private static Movie20Database mInstance;
     public static Movie20Database getInstance(Context context){

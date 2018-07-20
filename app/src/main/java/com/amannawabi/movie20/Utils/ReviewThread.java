@@ -5,7 +5,6 @@
 package com.amannawabi.movie20.Utils;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.amannawabi.movie20.Model.Review;
 
@@ -22,12 +21,6 @@ public class ReviewThread extends AsyncTask<URL, Void, List<Review>> {
 
     public ReviewThread(onReviewTaskCompleted reviewTaskCompleted) {
         mReviewTaskCompleted = reviewTaskCompleted;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-//        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     /**

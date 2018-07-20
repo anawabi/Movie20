@@ -5,12 +5,8 @@
 package com.amannawabi.movie20;
 
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.Room;
+
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,7 +18,6 @@ import android.widget.Toast;
 
 import com.amannawabi.movie20.Controller.MovieAdapter;
 import com.amannawabi.movie20.Data.Movie20Database;
-import com.amannawabi.movie20.Model.MovieViewModel;
 import com.amannawabi.movie20.Model.Movies;
 import com.amannawabi.movie20.Utils.FavoriteExecutor;
 import com.amannawabi.movie20.Utils.FavoriteThread;
@@ -47,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     private final String SELECTED_MENU_ITEM = "selecteditem";
     private static String mSelectedMenuItem;
     private final String RECYCLER_POSITION_KEY = "recycler_position";
-    private int mPosition = RecyclerView.NO_POSITION;
     private static Bundle mBundleState;
     private GridLayoutManager mLayoutManager;
 
@@ -65,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         mMovie20DB = Movie20Database.getInstance(this);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(RECYCLER_POSITION_KEY)) {
-                mPosition = savedInstanceState.getInt(RECYCLER_POSITION_KEY);
-                if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-                mRecyclerView.smoothScrollToPosition(mPosition);
+                int position = savedInstanceState.getInt(RECYCLER_POSITION_KEY);
+                if (position == RecyclerView.NO_POSITION) position = 0;
+                mRecyclerView.smoothScrollToPosition(position);
             }
           String mSavedMenuItem = savedInstanceState.getString(SELECTED_MENU_ITEM);
 //            Log.d(TAG, "onCreate: selected menu " +mSavedMenuItem);
@@ -81,18 +75,7 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         else {
             createRecycler("popular");
         }
-//
-////        final MovieAdapter movieAdapter = new MovieAdapter(this);
-//        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-//        movieViewModel.getAllMovies().observe(this, new Observer<List<Movies>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Movies> movies) {
-//                mAdapter = new MovieAdapter(movies, MainActivity.this);
-//
-////                Log.d(TAG, "onChanged: called in Oncreate");
-//
-//            }
-//        });
+
     }
 
 
@@ -116,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
     @Override
     protected void onResume() {
         super.onResume();
-//
         if (mBundleState != null) {
             if (mBundleState.containsKey(RECYCLER_POSITION_KEY)) {
                 int mRVPosition = mBundleState.getInt(RECYCLER_POSITION_KEY);
@@ -128,28 +110,31 @@ public class MainActivity extends AppCompatActivity implements onFavoriteTaskCom
         }
         Log.d(TAG, "onResume: Selected Menu 0" +mSelectedMenuItem);
         if (mSelectedMenuItem == "Favorite") {
-            Log.d(TAG, "onResume: Selected Menu" +mSelectedMenuItem);
             Toast.makeText(this, "Favorite Menu Selected", Toast.LENGTH_SHORT).show();
             FavoriteExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     final List<Movies> movies = mMovie20DB.mMovieDAO().viewMovie();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            final MovieAdapter movieAdapter = new MovieAdapter(MainActivity.this);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-//                                    mAdapter = new MovieAdapter(movies, MainActivity.this);
-                                    movieAdapter.setMovies(movies);
+                    if (movies != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mAdapter = new MovieAdapter(movies, MainActivity.this);
+//                                    movieAdapter.setMovies(movies);
 //
-                                    mRecyclerView.setAdapter(movieAdapter);
-                                }
-                            });
+                                        mRecyclerView.setAdapter(mAdapter);
+                                    }
+                                });
 
-                        }
-                    });
+                            }
+                        });
+                    } else{
+                        mAdapter = new MovieAdapter(mMovieList, MainActivity.this);
+                        mRecyclerView.setAdapter(mAdapter);
+                    }
                 }
             });
         }
